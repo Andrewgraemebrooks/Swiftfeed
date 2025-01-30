@@ -7,7 +7,10 @@ import FeedItem from '../components/FeedItem';
 
 export default function Index() {
   const navigation = useNavigation();
-  const [feedUrls, setFeedUrls] = useState<string[]>(['https://lifehacker.com/feed/rss']);
+  const [feedUrls, setFeedUrls] = useState<string[]>([
+    'https://lifehacker.com/feed/rss',
+    'https://rss.art19.com/new-heights',
+  ]);
   const [feedData, setFeedData] = useState<{ url: string; data: any }[]>([]);
 
   useEffect(() => {
@@ -40,16 +43,23 @@ export default function Index() {
       const rssFeedData = parser.parse(text);
       setFeedData((prevFeedData) => [
         ...prevFeedData,
-        { url: feed, data: [rssFeedData.rss.channel.item[0]] },
+        { url: feed, data: [formatFeedData(rssFeedData.rss.channel.item)[0]] },
       ]);
     });
   }, [feedUrls]);
+
+  const formatFeedData = (data: any) => {
+    return data.map((item: any) => ({
+      title: item.title,
+      content: item['content:encoded'],
+    }));
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
         data={feedData.flatMap((data) => data.data)}
-        renderItem={({ item }) => <FeedItem item={item} />}
+        renderItem={({ item }) => <FeedItem title={item.title} content={item.content} />}
       />
     </View>
   );
