@@ -1,13 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
+import { Article } from '../types';
 
-interface FeedItemProps {
-  title: string;
-  content: string;
-}
-
-const FeedItem: React.FC<FeedItemProps> = ({ title, content }) => {
+const FeedArticle: React.FC<Article> = ({ title, content }) => {
   const source = { html: content };
   const { width } = useWindowDimensions();
   return (
@@ -32,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FeedItem;
+export default FeedArticle;
