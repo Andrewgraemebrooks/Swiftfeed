@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, FlatList } from 'react-native';
+import { XMLParser } from 'fast-xml-parser';
+import FeedArticle from '../components/FeedArticle';
+import { FeedData, FeedItem, RawRSSData } from '../types';
 
 export default function Index() {
   const navigation = useNavigation();
-  const [feeds, setFeeds] = useState<string[]>([]);
+  const [feedUrls, setFeedUrls] = useState<string[]>([
+    'https://lifehacker.com/feed/rss',
+    'https://rss.art19.com/new-heights',
+  ]);
+  const [feedData, setFeedData] = useState<FeedData[]>([]);
+
   useEffect(() => {
     const onPress = () => {
-      // e.g. https://lifehacker.com/feed/rss
       Alert.prompt(
         'Add a RSS feed',
         undefined,
-        (newFeed: string) => setFeeds([...feeds, newFeed]),
+        (newFeed: string) => setFeedUrls([...feedUrls, newFeed]),
         'plain-text',
       );
     };
@@ -27,16 +34,34 @@ export default function Index() {
         />
       ),
     });
-  }, [feeds, navigation]);
+  }, [feedUrls, navigation]);
+
+  useEffect(() => {
+    const parser = new XMLParser();
+    feedUrls.forEach(async (feed) => {
+      const response = await fetch(feed);
+      const text = await response.text();
+      const rssFeedData: RawRSSData = parser.parse(text);
+      setFeedData((prevFeedData) => [
+        ...prevFeedData,
+        { url: feed, data: [formatFeedData(rssFeedData.rss.channel.item)[0]] },
+      ]);
+    });
+  }, [feedUrls]);
+
+  const formatFeedData = (data: FeedItem[]) => {
+    return data.map((item: any) => ({
+      title: item.title,
+      content: item['content:encoded'],
+    }));
+  };
 
   return (
     <View style={styles.container}>
-      {feeds.length === 0 && <Text style={styles.text}>Home screen</Text>}
-      {feeds.map((feed, index) => (
-        <Text key={index} style={styles.text}>
-          {feed}
-        </Text>
-      ))}
+      <FlatList
+        data={feedData.flatMap((data) => data.data)}
+        renderItem={({ item }) => <FeedArticle title={item.title} content={item.content} />}
+      />
     </View>
   );
 }
