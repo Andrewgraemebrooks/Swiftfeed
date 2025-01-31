@@ -21,7 +21,9 @@ export interface RawRSSData {
 
 export interface Article {
   title: string;
+  description: string;
   content: string;
+  link: string;
 }
 
 export interface FeedData {

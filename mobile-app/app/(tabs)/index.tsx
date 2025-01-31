@@ -3,8 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
-import FeedArticle from '../components/FeedArticle';
-import { FeedData, FeedItem, RawRSSData } from '../types';
+import { Article, FeedData, FeedItem, RawRSSData } from '../types';
+import FeedListItem from '../components/FeedListItem';
 
 export default function Index() {
   const navigation = useNavigation();
@@ -39,6 +39,7 @@ export default function Index() {
   useEffect(() => {
     const parser = new XMLParser();
     feedUrls.forEach(async (feed) => {
+      if (feedData.map((data) => data.url).includes(feed)) return;
       const response = await fetch(feed);
       const text = await response.text();
       const rssFeedData: RawRSSData = parser.parse(text);
@@ -47,12 +48,14 @@ export default function Index() {
         { url: feed, data: [formatFeedData(rssFeedData.rss.channel.item)[0]] },
       ]);
     });
-  }, [feedUrls]);
+  }, [feedData, feedUrls]);
 
-  const formatFeedData = (data: FeedItem[]) => {
+  const formatFeedData = (data: FeedItem[]): Article[] => {
     return data.map((item: any) => ({
       title: item.title,
       content: item['content:encoded'],
+      description: item.description,
+      link: item.link,
     }));
   };
 
@@ -60,7 +63,8 @@ export default function Index() {
     <View style={styles.container}>
       <FlatList
         data={feedData.flatMap((data) => data.data)}
-        renderItem={({ item }) => <FeedArticle title={item.title} content={item.content} />}
+        renderItem={({ item }) => <FeedListItem item={item} />}
+        keyExtractor={(item) => item.link}
       />
     </View>
   );
