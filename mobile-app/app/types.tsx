@@ -1,32 +1,28 @@
 // Global types
-export interface FeedItem {
+export interface FeedItemType {
   category: string;
   'content:encoded': string;
   'dc:creator': string;
   description: string;
-  guid: string;
+  guid: string | number;
   link: string;
   'media.thumbnail': string;
   pubDate: string;
   title: string;
 }
 
-export interface RawRSSData {
+export interface RawRSSDataType {
   rss: {
     channel: {
-      item: FeedItem[];
+      item: FeedItemType[];
     };
   };
 }
 
-export interface Article {
+export interface ArticleType {
   title: string;
   description: string;
   content: string;
   link: string;
-}
-
-export interface FeedData {
-  url: string;
-  data: Article[];
+  guid: string;
 }

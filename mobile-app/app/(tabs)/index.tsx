@@ -3,16 +3,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
-import { Article, FeedData, FeedItem, RawRSSData } from '../types';
-import FeedListItem from '../components/FeedListItem';
+import { ArticleType, FeedItemType, RawRSSDataType } from '../types';
+import FeedListItem from '../../components/FeedListItem';
+import useArticleStore from '../store/useArticleStore';
 
-export default function Index() {
+export default function HomeScreen() {
   const navigation = useNavigation();
   const [feedUrls, setFeedUrls] = useState<string[]>([
     'https://lifehacker.com/feed/rss',
     'https://rss.art19.com/new-heights',
   ]);
-  const [feedData, setFeedData] = useState<FeedData[]>([]);
+  const articles = useArticleStore((state) => state.articles);
+  const addArticle = useArticleStore((state) => state.addArticle);
 
   useEffect(() => {
     const onPress = () => {
@@ -39,32 +41,33 @@ export default function Index() {
   useEffect(() => {
     const parser = new XMLParser();
     feedUrls.forEach(async (feed) => {
-      if (feedData.map((data) => data.url).includes(feed)) return;
       const response = await fetch(feed);
       const text = await response.text();
-      const rssFeedData: RawRSSData = parser.parse(text);
-      setFeedData((prevFeedData) => [
-        ...prevFeedData,
-        { url: feed, data: [formatFeedData(rssFeedData.rss.channel.item)[0]] },
-      ]);
+      const rssFeedData: RawRSSDataType = parser.parse(text);
+      const firstArticle = formatFeedData(rssFeedData.rss.channel.item)[0];
+      if (articles.some((article) => article.guid === firstArticle.guid)) {
+        return;
+      }
+      addArticle(formatFeedData(rssFeedData.rss.channel.item)[0]);
     });
-  }, [feedData, feedUrls]);
+  }, [addArticle, articles, feedUrls]);
 
-  const formatFeedData = (data: FeedItem[]): Article[] => {
-    return data.map((item: any) => ({
+  const formatFeedData = (data: FeedItemType[]): ArticleType[] => {
+    return data.map((item: FeedItemType) => ({
       title: item.title,
       content: item['content:encoded'],
       description: item.description,
       link: item.link,
+      guid: item.guid.toString(),
     }));
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={feedData.flatMap((data) => data.data)}
+        data={articles}
         renderItem={({ item }) => <FeedListItem item={item} />}
-        keyExtractor={(item) => item.link}
+        keyExtractor={(item) => item.guid}
       />
     </View>
   );
