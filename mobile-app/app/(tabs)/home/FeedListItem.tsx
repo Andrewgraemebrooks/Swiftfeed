@@ -13,13 +13,7 @@ const FeedListItem: React.FC<{ item: ArticleType }> = ({ item }) => {
     renderedDescription = html.firstChild?.textContent ?? null;
   }
   return (
-    <Link
-      href={{
-        pathname: '/home/article',
-        // /* 1. Navigate to the details route with query params */
-        params: { guid: item.guid },
-      }}
-      asChild>
+    <Link href={{ pathname: '/home/article', params: { guid: item.guid } }} asChild>
       <Pressable>
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>
