@@ -10,16 +10,32 @@ const Article: React.FC = () => {
   const { guid } = params;
   const articles = useArticleStore((state) => state.articles);
   const article = articles.find((article) => article.guid === guid);
-  const { title, content, description } = article as ArticleType;
+  const { title, content, description, domain } = article as ArticleType;
   const source = { html: content ?? description };
   const { width } = useWindowDimensions();
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <RenderHtml contentWidth={width} source={source} baseStyle={styles.htmlStyling} />
+      <Text style={styles.domain}>{domain}</Text>
+      <RenderHtml
+        contentWidth={width}
+        source={source}
+        baseStyle={baseStyle}
+        tagsStyles={tagsStyles}
+      />
     </ScrollView>
   );
+};
+
+const tagsStyles = {
+  p: {
+    marginTop: 0,
+  },
+};
+
+const baseStyle = {
+  margin: 10,
 };
 
 const styles = StyleSheet.create({
@@ -29,11 +45,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    margin: 10,
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
     color: 'black',
   },
-  htmlStyling: {
-    margin: 10,
+  domain: {
+    fontSize: 14,
+    color: 'gray',
+    marginTop: 10,
+    marginLeft: 10,
   },
 });
 

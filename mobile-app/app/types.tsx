@@ -25,4 +25,5 @@ export interface ArticleType {
   content: string;
   link: string;
   guid: string;
+  domain: string;
 }

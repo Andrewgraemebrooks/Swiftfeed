@@ -6,7 +6,7 @@ import { parse } from 'node-html-parser';
 import { Link } from 'expo-router';
 
 const FeedListItem: React.FC<{ item: ArticleType }> = ({ item }) => {
-  const { title, description } = item;
+  const { title, description, domain } = item;
   let renderedDescription: string | null = description;
   if (isHtml(description)) {
     const html = parse(description);
@@ -23,6 +23,7 @@ const FeedListItem: React.FC<{ item: ArticleType }> = ({ item }) => {
       <Pressable>
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>
+          <Text style={styles.domain}>{domain}</Text>
           {renderedDescription && (
             <Text style={styles.description} numberOfLines={2}>
               {renderedDescription}
@@ -43,6 +44,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  domain: {
+    fontSize: 14,
+    color: 'lightgray',
     marginBottom: 5,
   },
   description: {
