@@ -1,5 +1,5 @@
 // Global types
-export interface FeedItemType {
+export interface RSSItemType {
   category: string;
   'content:encoded': string;
   'dc:creator': string;
@@ -14,7 +14,7 @@ export interface FeedItemType {
 export interface RawRSSDataType {
   rss: {
     channel: {
-      item: FeedItemType[];
+      item: RSSItemType[];
     };
   };
 }

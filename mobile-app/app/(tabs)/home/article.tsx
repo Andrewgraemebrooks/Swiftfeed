@@ -10,25 +10,30 @@ const Article: React.FC = () => {
   const { guid } = params;
   const articles = useArticleStore((state) => state.articles);
   const article = articles.find((article) => article.guid === guid);
-  const { title, content } = article as ArticleType;
-  const source = { html: content };
+  const { title, content, description } = article as ArticleType;
+  const source = { html: content ?? description };
   const { width } = useWindowDimensions();
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <RenderHtml contentWidth={width} source={source} />
+      <RenderHtml contentWidth={width} source={source} baseStyle={styles.htmlStyling} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: 'white',
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     margin: 10,
-    color: 'red',
+    color: 'black',
+  },
+  htmlStyling: {
+    margin: 10,
   },
 });
 

@@ -3,15 +3,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
-import { ArticleType, FeedItemType, RawRSSDataType } from '@/app/types';
+import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
 import useArticleStore from '@/app/store/useArticleStore';
+import log from 'loglevel';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [feedUrls, setFeedUrls] = useState<string[]>([
     'https://lifehacker.com/feed/rss',
     'https://rss.art19.com/new-heights',
+    'https://techcrunch.com/feed/',
   ]);
   const articles = useArticleStore((state) => state.articles);
   const addArticle = useArticleStore((state) => state.addArticle);
@@ -44,7 +46,8 @@ export default function HomeScreen() {
       const response = await fetch(feed);
       const text = await response.text();
       const rssFeedData: RawRSSDataType = parser.parse(text);
-      const firstArticle = formatFeedData(rssFeedData.rss.channel.item)[0];
+      const firstArticle = rssFeedData.rss.channel.item[0];
+      log.debug(firstArticle.title, firstArticle);
       if (articles.some((article) => article.guid === firstArticle.guid)) {
         return;
       }
@@ -52,8 +55,8 @@ export default function HomeScreen() {
     });
   }, [addArticle, articles, feedUrls]);
 
-  const formatFeedData = (data: FeedItemType[]): ArticleType[] => {
-    return data.map((item: FeedItemType) => ({
+  const formatFeedData = (data: RSSItemType[]): ArticleType[] => {
+    return data.map((item: RSSItemType) => ({
       title: item.title,
       content: item['content:encoded'],
       description: item.description,
