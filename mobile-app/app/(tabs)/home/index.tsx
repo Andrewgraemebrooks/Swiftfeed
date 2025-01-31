@@ -3,9 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
-import { ArticleType, FeedItemType, RawRSSDataType } from '../types';
-import FeedListItem from '../../components/FeedListItem';
-import useArticleStore from '../store/useArticleStore';
+import { ArticleType, FeedItemType, RawRSSDataType } from '@/app/types';
+import FeedListItem from './FeedListItem';
+import useArticleStore from '@/app/store/useArticleStore';
 
 export default function HomeScreen() {
   const navigation = useNavigation();

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import { ArticleType } from './types';
+import { ArticleType } from '@/app/types';
 import { useLocalSearchParams } from 'expo-router';
-import useArticleStore from './store/useArticleStore';
+import useArticleStore from '@/app/store/useArticleStore';
 
 const Article: React.FC = () => {
   const params = useLocalSearchParams();

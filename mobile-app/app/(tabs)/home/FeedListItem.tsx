@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { ArticleType } from '../app/types';
+import { ArticleType } from '@/app/types';
 import isHtml from 'is-html';
 import { parse } from 'node-html-parser';
 import { Link } from 'expo-router';
@@ -15,7 +15,7 @@ const FeedListItem: React.FC<{ item: ArticleType }> = ({ item }) => {
   return (
     <Link
       href={{
-        pathname: '/article',
+        pathname: '/home/article',
         // /* 1. Navigate to the details route with query params */
         params: { guid: item.guid },
       }}
