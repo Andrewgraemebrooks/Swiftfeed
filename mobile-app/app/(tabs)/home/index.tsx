@@ -17,6 +17,11 @@ export default function HomeScreen() {
   ]);
   const articles = useArticleStore((state) => state.articles);
   const addArticle = useArticleStore((state) => state.addArticle);
+  const reset = useArticleStore((state) => state.reset);
+
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   useEffect(() => {
     const onPress = () => {
