@@ -26,4 +26,5 @@ export interface ArticleType {
   link: string;
   guid: string;
   domain: string;
+  pubDate: string;
 }
