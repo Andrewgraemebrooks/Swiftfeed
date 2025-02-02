@@ -1,5 +1,6 @@
 # Swiftfeed
 
 ## Installation
-1. `npm install`
-1. `npm run ios`
+1. Install the packages: `npm install`
+1. Create the iOS development build: `npm run ios`
+1. From then on, you can run `npm run start` to develop
