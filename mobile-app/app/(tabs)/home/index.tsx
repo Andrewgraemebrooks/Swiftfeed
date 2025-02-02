@@ -65,7 +65,8 @@ export default function HomeScreen() {
       description: item.description,
       link: item.link,
       guid: item.guid.toString(),
-      domain,
+      domain: domain,
+      pubDate: item.pubDate,
     }));
   };
 
