@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { View, StyleSheet, Alert, FlatList } from 'react-native';
+import { View, StyleSheet, Alert, FlatList, ActivityIndicator } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
 import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
@@ -74,11 +74,15 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={articles}
-        renderItem={({ item }) => <FeedListItem item={item} />}
-        keyExtractor={(item) => item.guid}
-      />
+      {articles.length === 0 ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatList
+          data={articles}
+          renderItem={({ item }) => <FeedListItem item={item} />}
+          keyExtractor={(item) => item.guid}
+        />
+      )}
     </View>
   );
 }
