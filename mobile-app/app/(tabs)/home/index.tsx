@@ -5,8 +5,10 @@ import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
 import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
-import useArticleStore from '@/app/store/useArticleStore';
 import log from 'loglevel';
+import type { RootState } from '@/app/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { addArticle } from '@/app/store/articleSlice';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -15,13 +17,8 @@ export default function HomeScreen() {
     'https://rss.art19.com/new-heights',
     'https://techcrunch.com/feed/',
   ]);
-  const articles = useArticleStore((state) => state.articles);
-  const addArticle = useArticleStore((state) => state.addArticle);
-  const reset = useArticleStore((state) => state.reset);
-
-  useEffect(() => {
-    reset();
-  }, [reset]);
+  const articles = useSelector((state: RootState) => state.articles.articles);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onPress = () => {
@@ -56,12 +53,12 @@ export default function HomeScreen() {
         return;
       }
       const domain = new URL(feed).hostname;
-      addArticle(formatFeedData(rssFeedData.rss.channel.item, domain)[0]);
+      dispatch(addArticle(formatFeedData(rssFeedData.rss.channel.item, domain)[0]));
       log.debug('feed', feed);
       log.debug('url', domain);
       log.debug(firstArticle.title, firstArticle);
     });
-  }, [addArticle, articles, feedUrls]);
+  }, [articles, dispatch, feedUrls]);
 
   const formatFeedData = (data: RSSItemType[], domain: string): ArticleType[] => {
     return data.map((item: RSSItemType) => ({

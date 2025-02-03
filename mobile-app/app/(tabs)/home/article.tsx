@@ -3,15 +3,16 @@ import { Text, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
 import RenderHtml from 'react-native-render-html';
 import { ArticleType } from '@/app/types';
 import { useLocalSearchParams } from 'expo-router';
-import useArticleStore from '@/app/store/useArticleStore';
 import { DateTime } from 'luxon';
 import { getLocales, getTimeZone } from 'react-native-localize';
 import log from 'loglevel';
+import type { RootState } from '@/app/store';
+import { useSelector } from 'react-redux';
 
 const Article: React.FC = () => {
   const params = useLocalSearchParams();
   const { guid } = params;
-  const articles = useArticleStore((state) => state.articles);
+  const articles = useSelector((state: RootState) => state.articles.articles);
   const article = articles.find((article) => article.guid === guid);
   const { title, content, description, domain, pubDate } = article as ArticleType;
   const source = { html: content ?? description };
