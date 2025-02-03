@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { View, StyleSheet, Alert, FlatList } from 'react-native';
+import { View, StyleSheet, Alert, FlatList, Button, Text } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
 import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
 import useArticleStore from '@/app/store/useArticleStore';
 import log from 'loglevel';
+import type { RootState } from '@/app/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { decrement, increment } from '@/app/store/counterSlice';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -18,6 +21,8 @@ export default function HomeScreen() {
   const articles = useArticleStore((state) => state.articles);
   const addArticle = useArticleStore((state) => state.addArticle);
   const reset = useArticleStore((state) => state.reset);
+  const count = useSelector((state: RootState) => state.counter.value);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     reset();
@@ -82,6 +87,9 @@ export default function HomeScreen() {
         renderItem={({ item }) => <FeedListItem item={item} />}
         keyExtractor={(item) => item.guid}
       />
+      <Button title="Increment" onPress={() => dispatch(increment())} />
+      <Button title="Decrement" onPress={() => dispatch(decrement())} />
+      <Text>Current count: {count}</Text>
     </View>
   );
 }
