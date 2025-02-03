@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { View, StyleSheet, Alert, FlatList, Button, Text } from 'react-native';
+import { View, StyleSheet, Alert, FlatList } from 'react-native';
 import { XMLParser } from 'fast-xml-parser';
 import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
-import useArticleStore from '@/app/store/useArticleStore';
 import log from 'loglevel';
 import type { RootState } from '@/app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { decrement, increment } from '@/app/store/counterSlice';
+import { addArticle } from '@/app/store/articleSlice';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -18,15 +17,8 @@ export default function HomeScreen() {
     'https://rss.art19.com/new-heights',
     'https://techcrunch.com/feed/',
   ]);
-  const articles = useArticleStore((state) => state.articles);
-  const addArticle = useArticleStore((state) => state.addArticle);
-  const reset = useArticleStore((state) => state.reset);
-  const count = useSelector((state: RootState) => state.counter.value);
+  const articles = useSelector((state: RootState) => state.articles.articles);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    reset();
-  }, [reset]);
 
   useEffect(() => {
     const onPress = () => {
@@ -61,12 +53,12 @@ export default function HomeScreen() {
         return;
       }
       const domain = new URL(feed).hostname;
-      addArticle(formatFeedData(rssFeedData.rss.channel.item, domain)[0]);
+      dispatch(addArticle(formatFeedData(rssFeedData.rss.channel.item, domain)[0]));
       log.debug('feed', feed);
       log.debug('url', domain);
       log.debug(firstArticle.title, firstArticle);
     });
-  }, [addArticle, articles, feedUrls]);
+  }, [articles, dispatch, feedUrls]);
 
   const formatFeedData = (data: RSSItemType[], domain: string): ArticleType[] => {
     return data.map((item: RSSItemType) => ({
@@ -87,9 +79,6 @@ export default function HomeScreen() {
         renderItem={({ item }) => <FeedListItem item={item} />}
         keyExtractor={(item) => item.guid}
       />
-      <Button title="Increment" onPress={() => dispatch(increment())} />
-      <Button title="Decrement" onPress={() => dispatch(decrement())} />
-      <Text>Current count: {count}</Text>
     </View>
   );
 }
