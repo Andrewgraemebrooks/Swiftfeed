@@ -30,6 +30,7 @@
     "expo-system-ui": "~4.0.7",
     "expo-web-browser": "~14.0.2",
     "fast-xml-parser": "^4.5.1",
+    "htmlparser2": "^10.0.0",
     "is-html": "^3.1.0",
     "lodash": "^4.17.21",
     "loglevel": "^1.9.2",

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
-import RenderHtml from 'react-native-render-html';
 import { ArticleType } from '@/app/types';
 import { useLocalSearchParams } from 'expo-router';
 import { DateTime } from 'luxon';
@@ -8,6 +7,7 @@ import { getLocales, getTimeZone } from 'react-native-localize';
 import log from 'loglevel';
 import type { RootState } from '@/app/store';
 import { useSelector } from 'react-redux';
+import RenderHtml from './RenderHtml';
 
 const Article: React.FC = () => {
   const params = useLocalSearchParams();
@@ -27,12 +27,13 @@ const Article: React.FC = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{`${domain} | ${date}`}</Text>
-      <RenderHtml
+      {/* <RenderHtml
         contentWidth={width}
         source={source}
         baseStyle={baseStyle}
         tagsStyles={tagsStyles}
-      />
+      /> */}
+      <RenderHtml html={content ?? description} />
     </ScrollView>
   );
 };

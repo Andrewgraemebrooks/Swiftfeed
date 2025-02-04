@@ -28,3 +28,7 @@ export interface ArticleType {
   domain: string;
   pubDate: string;
 }
+
+export interface RenderHtmlProps {
+  html: string;
+}
