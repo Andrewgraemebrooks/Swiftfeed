@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { Text, StyleSheet, useWindowDimensions, ScrollView, View } from 'react-native';
 import { ArticleType } from '@/app/types';
 import { useLocalSearchParams } from 'expo-router';
 import { DateTime } from 'luxon';
@@ -33,7 +33,9 @@ const Article: React.FC = () => {
         baseStyle={baseStyle}
         tagsStyles={tagsStyles}
       /> */}
-      <RenderHtml html={content ?? description} />
+      <View style={styles.htmlContainer}>
+        <RenderHtml html={content ?? description} />
+      </View>
     </ScrollView>
   );
 };
@@ -51,6 +53,9 @@ const baseStyle = {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+  },
+  htmlContainer: {
+    padding: 10,
   },
   title: {
     fontSize: 20,
