@@ -1,15 +1,30 @@
 import React from 'react';
-import { Stack } from 'expo-router';
-import { Provider } from 'react-redux';
-import { store } from './store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
+import { LogBox } from 'react-native';
+import log, { LogLevelDesc } from 'loglevel';
 
-export default function RootLayout() {
+log.setLevel(process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevelDesc);
+
+// react-native-render-html warnings from Expo upgrade
+LogBox.ignoreLogs([
+  'TNodeChildrenRenderer: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
+  'MemoizedTNodeRenderer: Support for defaultProps will be removed from memo components in a future major release. Use JavaScript default parameters instead.',
+  'TRenderEngineProvider: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
+]);
+
+export default function Layout() {
   return (
-    <Provider store={store}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer>
+        <Drawer.Screen
+          name="main"
+          options={{
+            drawerLabel: 'Home',
+            title: 'Home',
+          }}
+        />
+      </Drawer>
+    </GestureHandlerRootView>
   );
 }
