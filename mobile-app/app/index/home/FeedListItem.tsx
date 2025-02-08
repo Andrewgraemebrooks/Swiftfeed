@@ -20,7 +20,7 @@ const FeedListItem: React.FC<{ item: ArticleType }> = ({ item }) => {
     .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY);
 
   return (
-    <Link href={{ pathname: '/home/article', params: { guid: item.guid } }} asChild>
+    <Link href={{ pathname: '/main/home/article', params: { guid: item.guid } }} asChild>
       <Pressable>
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>

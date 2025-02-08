@@ -6,9 +6,9 @@ import { XMLParser } from 'fast-xml-parser';
 import { ArticleType, RSSItemType, RawRSSDataType } from '@/app/types';
 import FeedListItem from './FeedListItem';
 import log from 'loglevel';
-import type { RootState } from '@/app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { addArticle } from '@/app/store/articleSlice';
+import type { RootState } from '@/store/store';
+import { addArticle } from '@/store/articleSlice';
 
 export default function HomeScreen() {
   const navigation = useNavigation();

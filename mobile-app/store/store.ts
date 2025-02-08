@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
-import articleReducer from './store/articleSlice';
+import articleReducer from './articleSlice';
 
 export const store = configureStore({
   reducer: {

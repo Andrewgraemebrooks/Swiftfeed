@@ -6,7 +6,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { DateTime } from 'luxon';
 import { getLocales, getTimeZone } from 'react-native-localize';
 import log from 'loglevel';
-import type { RootState } from '@/app/store';
+import type { RootState } from '@/app/store/store';
 import { useSelector } from 'react-redux';
 
 const Article: React.FC = () => {
